@@ -9,11 +9,18 @@ def nombre_en_lettre(x):
     return alphabet[x - 1]
 
 def deplacer_joker_noir(jeu):
+    """
+    Déplace le Joker noir (=53) d'une position vers le bas.
+    Si le Joker noir est en dernière position, il se déplace en deuxième position.
+    """
     i = jeu.index(53)
     j = (i + 1) % len(jeu)
     jeu[i], jeu[j] = jeu[j], jeu[i]
 
 def deplacer_joker_rouge(jeu):
+    """
+    Déplace le Joker rouge (=54) de deux positions vers le bas
+    """
     i = jeu.index(54)
     for _ in range(2):
         j = (i + 1) % len(jeu)
@@ -21,6 +28,13 @@ def deplacer_joker_rouge(jeu):
         i = j
 
 def double_coupe(jeu):
+    """
+    On identifie les deux jokers et on divise le deck en trois 'mini-pacquets' :
+      - Toutes les cartes avant le premier joker,
+      - Les deux jokers et tout ce qui est entre eux,
+      - Toutes les cartes après le second joker.
+    Ensuite, on échange le premier et le dernier mini pacquet.
+    """
     j1 = jeu.index(53)
     j2 = jeu.index(54)
     haut = min(j1, j2)
@@ -31,6 +45,11 @@ def double_coupe(jeu):
     jeu[:] = partie_bas + partie_milieu + partie_haut
 
 def coupe_par_derniere_carte(jeu):
+    """
+    Effectue la coupe par rapport à la dernière carte n,
+    On déplace les n premières cartes du haut du deck et on les insère
+    juste avant la dernière carte.
+    """
     derniere = jeu[-1]
     n = 53 if derniere >= 53 else derniere
     if n < 53:
@@ -40,6 +59,10 @@ def coupe_par_derniere_carte(jeu):
         jeu[:] = reste + dessus + [jeu[-1]]
 
 def formatter_deck(jeu):
+    """
+    POUR L'AFFICHAGE
+    Retourne une chaîne HTML représentant l'état du pacquet de carte.
+    """
     formatted_cards = []
     for card in jeu:
         if card == 53:
@@ -51,6 +74,15 @@ def formatter_deck(jeu):
     return "[" + ", ".join(formatted_cards) + "]"
 
 def lire_cle(jeu):
+    """
+    Effectue la lecture de la clé en détaillant les étapes :
+      - Affiche la première carte du pacquet qui détermine l'indice.
+      - Affiche la carte lue à cet indice.
+      - Si cette carte > 26, on fait %26.
+    Retourne un tuple (cle, log) où:
+      - cle est la clé (entre 1 et 26) ou None si une erreur (joker) survient,
+      - log est une liste de chaînes HTML détaillant le calcul (POUR L'AFFICHAGE).
+    """
     log = []
     premiere = jeu[0]
     log.append(f"<b>première carte [0]</b> {premiere}")
@@ -76,6 +108,10 @@ def lire_cle(jeu):
     return cle_finale, log
 
 def generer_cle_solitaire(jeu):
+    """
+    Exécute les 5 opérations de l'algorithme Solitaire.
+    Retourne (cle, log), où cle est la clé obtenue et log est le détail en HTML (pr l'affichage).
+    """
     log = []
     log.append(f"<b>paquet de carte initial</b> {formatter_deck(jeu)}")
     
@@ -96,7 +132,13 @@ def generer_cle_solitaire(jeu):
     
     return cle, log
 
-def generer_flux_cles_verbose(jeu, longueur):
+def generer_flux_cles(jeu, longueur):
+    """
+    Génère le flux de clés nécessaire pour chiffrer ou déchiffrer un message.
+    Retourne (flux, full_log) où:
+      - flux est une liste contenant la même clé répétée 'longueur' fois,
+      - full_log est le log détaillé (HTML) du calcul de la clé.
+    """
     flux = []
     full_log = []
     deck_temp = jeu[:] 
@@ -107,11 +149,14 @@ def generer_flux_cles_verbose(jeu, longueur):
     return flux, full_log
 
 def chiffrer_msg(message, jeu):
+    """
+    Chiffre un message en utilisant l'algorithme Solitaire.
+    """
     message_maj = message.upper()
     lettres = [c for c in message_maj if 'A' <= c <= 'Z']
     msg_filtre = "".join(lettres)
     
-    cles, log_global = generer_flux_cles_verbose(jeu, len(msg_filtre))
+    cles, log_global = generer_flux_cles(jeu, len(msg_filtre))
     
     resultat = []
     log_detail = []
@@ -138,8 +183,11 @@ def chiffrer_msg(message, jeu):
     return texte_chiffre, full_log_combined
 
 def dechiffrer_msg(message_chiffre, jeu):
+    """
+    Déchiffre le message
+    """
     msg_c = "".join(c for c in message_chiffre.upper() if 'A' <= c <= 'Z')
-    cles, log_global = generer_flux_cles_verbose(jeu, len(msg_c))
+    cles, log_global = generer_flux_cles(jeu, len(msg_c))
     
     resultat = []
     log_detail = []
