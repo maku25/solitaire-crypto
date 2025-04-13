@@ -1,8 +1,9 @@
-# solitaire-crypto
-# UE = codage et cryptographie
+# Mini-projet Crypto : Méthode Solitaire (Bruce Schneier)
 
-Mini-projet implémentant la méthode Solitaire de Bruce Schneier.
-Ce projet est développé en Python :
- - génération d’une clé pseudo-aléatoire à partir d’un simple jeu de 54 cartes (joker noir, joker rouge).
- - chiffrement et déchiffrement de texte par somme et soustraction (%26).
- - interface graphique (PyQt) pour saisir un message et visualiser le résultat en temps réel.
+KUT Kemal & KEITA Sidy Mahmoud 
+TP1
+
+Mini-projet de cryptographie implémentant la méthode Solitaire (conçue par Bruce Schneier), ainsi qu’une interface graphique réalisée avec PyQt5 pour tester le chiffrement et le déchiffrement de messages.
+
+Solitaire est un algorithme de chiffrement par flux de clés générées à partir d’un simple jeu de cartes de 54 cartes (52 cartes standard + 2 jokers). Il permet de produire, pour chaque lettre du message, une valeur pseudo-aléatoire (1..26) et de l’additionner (mod 26) ou la soustraire (mod 26) au texte pour le chiffrer/déchiffrer.
+
