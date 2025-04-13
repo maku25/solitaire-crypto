@@ -1,4 +1,4 @@
-# Mini-projet Crypto : Méthode Solitaire (Bruce Schneier)
+# Mini-projet Crypto : Solitaire (Bruce Schneier)
 
 KUT Kemal & KEITA Sidy Mahmoud 
 TP1
